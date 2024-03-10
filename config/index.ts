@@ -5,7 +5,7 @@ export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
 export const APP_INFO: AppInfo = {
   title: 'เพื่อนใจ',
   description: '',
-  copyright: '',
+  copyright: 'ONEMAi',
   privacy_policy: '',
   default_language: 'en-US',
 }
