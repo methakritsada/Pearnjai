@@ -5,9 +5,9 @@ export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
 export const APP_INFO: AppInfo = {
   title: 'เพื่อนใจ',
   description: '',
-  copyright: 'ONEMAi',
+  copyright: 'ONEMAi 555',
   privacy_policy: '',
-  default_language: 'en-US',
+  default_language: 'en',
 }
 
 export const isShowPrompt = false
