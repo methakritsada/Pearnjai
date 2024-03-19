@@ -4,10 +4,10 @@ export const API_KEY = `${process.env.NEXT_PUBLIC_APP_KEY}`
 export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
 export const APP_INFO: AppInfo = {
   title: 'เพื่อนใจ',
-  description: '',
-  copyright: 'ONEMAi 555',
-  privacy_policy: '',
-  default_language: 'en',
+  description: 'รายละเอียด',
+  copyright: 'ONEMAi',
+  privacy_policy: 'policy',
+  default_language: 'th-TH',
 }
 
 export const isShowPrompt = false

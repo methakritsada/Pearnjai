@@ -18,12 +18,12 @@
 }
 
 .customBtn {
-  width: 136px;
+  width: 200px;
 }
 
 .logo {
-  width: 48px;
-  height: 20px;
+  width: 60px;
+  height: 30px;
   background: url(./icons/logo.png) center center no-repeat;
   background-size: contain;
 }
