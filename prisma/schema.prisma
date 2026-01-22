@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = env("DATABASE_PROVIDER")
+  url      = env("DATABASE_URL")
+}
+
+model DailyReport {
+  id        String   @id @default(cuid())
+  dateLocal String   @unique
+  createdAt DateTime @default(now())
+  call1Json Json
+  call2Json Json
+}

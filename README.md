@@ -1,76 +1,75 @@
-# Conversion Web App Template
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FX News → Top 5 Trade Decision System (Pro)
 
-## Config App
-Create a file named `.env.local` in the current directory and copy the contents from `.env.example`. Setting the following content:
-```
-# APP ID
-NEXT_PUBLIC_APP_ID=
-# APP API key
-NEXT_PUBLIC_APP_KEY=
-# APP URL
-NEXT_PUBLIC_API_URL=
-```
+Production-ready MVP for generating a daily FX macro brief, currency bias matrix, and ranked Top 5 trade scenarios using OpenAI Responses API + Vercel Cron. Built with Next.js App Router, Prisma, TailwindCSS, and shadcn/ui.
 
-Config more in `config/index.ts` file:   
-```js
-export const APP_INFO: AppInfo = {
-  title: 'Chat APP',
-  description: '',
-  copyright: '',
-  privacy_policy: '',
-  default_language: 'zh-Hans'
-}
+## Features
+- Fetches 24–48h FX/macro news via OpenAI web_search (Call 1) with strict JSON schema outputs.
+- Builds a currency bias matrix for USD, EUR, GBP, JPY, CHF, AUD, NZD, CAD.
+- Ranks FX pairs and outputs Top 5 scenarios (Call 2) using RSI 75/25 + SMC logic.
+- Stores daily reports in Postgres (production) or SQLite (local development).
+- Dashboard, history list, and report detail pages.
+- Secure cron endpoint with `CRON_SECRET`.
 
-export const isShowPrompt = true
-export const promptTemplate = ''
-```
+## Tech stack
+- Next.js 14 (App Router) + TypeScript
+- TailwindCSS + shadcn/ui
+- Prisma ORM
+- OpenAI Node SDK (Responses API)
+- Vercel Postgres (production) + SQLite (local)
 
-## Getting Started
-First, install dependencies:
+## Local setup
 ```bash
-npm install
-# or
-yarn
-# or
-pnpm install
-```
-
-Then, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm i
+cp .env.example .env
+pnpm prisma migrate dev --name init
 pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Using Docker
-
+### `.env` (example)
 ```
-docker build . -t <DOCKER_HUB_REPO>/webapp-conversation:latest
-# now you can access it in port 3000
-docker run -p 3000:3000 <DOCKER_HUB_REPO>/webapp-conversation:latest
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4.1-mini
+DATABASE_PROVIDER=sqlite
+DATABASE_URL="file:./dev.db"
+CRON_SECRET=
+APP_URL=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Manual run (cron simulation)
+```bash
+curl -X POST "$APP_URL/api/run" \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
 
-## Learn More
+## Vercel deployment
+1. Create a Vercel Postgres database.
+2. Set `DATABASE_URL` to the Postgres connection string.
+3. Set `DATABASE_PROVIDER=postgresql`.
+4. Add `OPENAI_API_KEY` and `CRON_SECRET`.
+5. Deploy.
 
-To learn more about Next.js, take a look at the following resources:
+## Vercel Cron
+The cron schedule runs daily at **07:00 Asia/Bangkok** (00:00 UTC).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`vercel.json`:
+```json
+{
+  "crons": [
+    {
+      "path": "/api/run",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Configure the cron request header:
+```
+Authorization: Bearer CRON_SECRET
+```
 
-## Deploy on Vercel
+## Cost notes
+- `web_search` is enabled only for Call 1; Call 2 is analysis-only.
 
-> ⚠️ If you are using [Vercel Hobby](https://vercel.com/pricing), your message will be trucated due to the limitation of vercel.
-
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Safety disclaimer
+This tool provides automated macro analysis for educational purposes and does **not** constitute financial advice. Always trade at your own risk.
